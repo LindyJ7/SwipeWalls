@@ -1,7 +1,7 @@
-import React, {Component, PropTypes} from 'react';
+import React from 'react';
 import Image from 'react-native';
 
-class FullscreenImage extends Component {
+export default class FullscreenImage extends React.Component {
 
     constructor(props) {
         super(props);
@@ -11,7 +11,9 @@ class FullscreenImage extends Component {
     render() {
         const {imageURL} = this.props;
         return (
-            <Image source = {imageURL} style = {{flex: 1}} />
+            <View style = {{flex: 1}}>
+                <Image source = {imageURL} style = {{flex: 1}} />
+            </View>
         );
     };
 }
