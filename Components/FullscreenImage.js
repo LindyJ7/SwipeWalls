@@ -12,6 +12,7 @@ export default class FullscreenImage extends React.Component {
         const {imageURL} = this.props;
         return (
             <View style = {{flex: 1}}>
+                <Text>You are in a new Image!</Text>
                 <Image source = {imageURL} style = {{flex: 1}} />
             </View>
         );

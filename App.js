@@ -1,12 +1,10 @@
 import React from 'react';
 import { ActivityIndicator, Text, View, Image, StatusBar, TouchableWithoutFeedback } from 'react-native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
-import FullscreenImage from './Components/FullscreenImage.js';
-import { createSwitchNavigator } from 'react-navigation';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 
 
-
-export default class FetchExample extends React.Component {
+class FetchExample extends React.Component {
 
   constructor(props){
     super(props);
@@ -47,17 +45,15 @@ export default class FetchExample extends React.Component {
       <View style={{flex: 1, backgroundColor: 'lightSkyBlue', justifyContent: "center", alignContent: "center"}}>
         <StatusBar hidden={true} />
         <View style={{flex: 1, justifyContent: "center", alignContent: "center"}}>
-        <GestureRecognizer style={{flex: 1, padding: 20}} onSwipeLeft={() => {this.onSwipeLeft()}} onSwipeRight={() => this.onSwipeRight()}>
-          <TouchableWithoutFeedback style={{flex: 1}}>
-            <Image source= {{uri: this.state.data}} style={{height: 500, width: 300, alignSelf: "center"}} onPress = {() => this.props.navigation.navigate('FullscreenWall')} />
+        <GestureRecognizer style={{flex: 1, padding: 150}} onSwipeLeft={() => {this.onSwipeLeft()}} onSwipeRight={() => this.onSwipeRight()}>
+          <TouchableWithoutFeedback style={{flex: 1}} onPress = {() => this.props.navigation.navigate('FullscreenWall', {'imgURL': this.state.data})} >
+            <Image source= {{uri: this.state.data}} style={{height: 500, width: 300, alignSelf: "center"}} onPress = {() => this.props.navigation.navigate('FullscreenWall', {'imgURL': this.state.data})}  />
           </TouchableWithoutFeedback>
         </GestureRecognizer>
         </View>
       </View>
     );
   }
-
-
 
   onSwipeLeft = () => {
     if (this.state.i < 24) {
@@ -76,7 +72,34 @@ export default class FetchExample extends React.Component {
   }
 }
 
-const AppNavigator = createSwitchNavigator({
-  "WallSwiper": FetchExample,
-  "FullscreenWall": FullscreenImage,
-});
+class FullscreenImage extends React.Component {
+
+  constructor(props) {
+      super(props);
+      this.state = {isLoaded: false, isError: false, data: this.props.navigation.getParam('imgURL', 'http://www.dumpaday.com/wp-content/uploads/2018/09/photos-21-3.jpg')};
+  }
+
+  render() {
+      return (
+          <View style = {{flex: 1}}>
+              <Image source = {{uri: this.state.data}} style = {{flex: 1}} />
+          </View>
+      );
+  };
+}
+
+
+const AppNavigator = createStackNavigator({
+  WallSwiper: { screen: FetchExample },
+  FullscreenWall: { screen: FullscreenImage }},
+  {
+    initialRouteName: 'WallSwiper',
+    defaultNavigationOptions: {
+      header: null,
+      
+    },
+  }
+);
+
+const App = createAppContainer(AppNavigator);
+export default App;
