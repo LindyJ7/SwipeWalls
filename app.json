@@ -24,7 +24,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.Linja7.SwipeWalls"
+    },
+    "android": {
+      "package": "com.Linja7.SwipeWalls"
     }
   }
 }

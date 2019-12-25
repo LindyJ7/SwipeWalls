@@ -45,9 +45,9 @@ class FetchExample extends React.Component {
       <View style={{flex: 1, backgroundColor: 'lightSkyBlue', justifyContent: "center", alignContent: "center"}}>
         <StatusBar hidden={true} />
         <View style={{flex: 1, justifyContent: "center", alignContent: "center"}}>
-        <GestureRecognizer style={{flex: 1, padding: 150}} onSwipeLeft={() => {this.onSwipeLeft()}} onSwipeRight={() => this.onSwipeRight()}>
+        <GestureRecognizer style={{flex: 1, padding: 90}} onSwipeLeft={() => {this.onSwipeLeft()}} onSwipeRight={() => this.onSwipeRight()}>
           <TouchableWithoutFeedback style={{flex: 1}} onPress = {() => this.props.navigation.navigate('FullscreenWall', {'imgURL': this.state.data})} >
-            <Image source= {{uri: this.state.data}} style={{height: 500, width: 300, alignSelf: "center"}} onPress = {() => this.props.navigation.navigate('FullscreenWall', {'imgURL': this.state.data})}  />
+            <Image source= {{uri: this.state.data}} style={{height: 600, width: 350, alignSelf: "center"}} onPress = {() => this.props.navigation.navigate('FullscreenWall', {'imgURL': this.state.data})}  />
           </TouchableWithoutFeedback>
         </GestureRecognizer>
         </View>
@@ -60,6 +60,26 @@ class FetchExample extends React.Component {
       var imgNum = this.state.i + 1;
       var imgURL = this.state.dataSource[imgNum].data.url;
       this.setState((i) => ({i: imgNum, data: imgURL}));
+    } else {
+      this.setState( function() {
+        dataSource = fetch('https://www.reddit.com/r/wallpapers/new.json')
+        .then((response) => response.json())
+        .then((responseJson) => {
+  
+          this.setState({
+            isLoading: false,
+            i: 0,
+            dataSource: responseJson.data.children,
+            data: responseJson.data.children[0].data.url,
+          }, function(){
+  
+          });
+  
+        })
+        .catch((error) =>{
+          console.error(error);
+        });
+      })
     }
   }
  
@@ -82,7 +102,9 @@ class FullscreenImage extends React.Component {
   render() {
       return (
           <View style = {{flex: 1}}>
+            <TouchableWithoutFeedback style={{flex: 1}} onPress = {() => this.props.navigation.navigate('WallSwiper')} >
               <Image source = {{uri: this.state.data}} style = {{flex: 1}} />
+            </TouchableWithoutFeedback>
           </View>
       );
   };
